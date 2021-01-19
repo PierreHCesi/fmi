@@ -3,9 +3,6 @@
 Dans le cadre de la validation des technologies Web,
 une application permettant de gérer les feuilles de match des équipes de ligue 1 est mis en place 
 
-Benjamin OLIVEIRA - Pierre HERRER 
-CESI 2020-2021 : Responsable en ingénierie des logiciels
-
 ### Requirements
 ---
 
@@ -43,3 +40,27 @@ npm install
 # Démarrer le serveur FRONT-END
 npm run serve -- --port 8081
 ```
+
+### Accès a l'application Web
+---
+
+```
+# URL de connexion
+http://localhost/8081
+
+# Comptes Utilisateur de l'application Web
+-------------------------------------
+| User |    MDP    |      Rôles     |
+|------|-----------|----------------|
+| titi | titi1234  | Administration |
+|------|-----------|----------------|
+| om   | om1234    | User           |
+|------|-----------|----------------|
+| psg  | psg1234   | User           |
+-------------------------------------
+```
+
+### Auteurs 
+---
+Benjamin OLIVEIRA - Pierre HERRER\
+CESI 2020-2021 : Responsable en ingénierie des logiciels
