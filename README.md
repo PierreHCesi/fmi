@@ -7,8 +7,8 @@ une application permettant de gérer les feuilles de match des équipes de ligue
 ---
 
 - MySQL 5.7
-- Node JS (latest)
-- NPM (latest)
+- Node JS (12.18 ou supérieur)
+- NPM (6.14 ou supérieur)
 
 ### Installation
 ---
