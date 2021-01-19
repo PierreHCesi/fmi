@@ -13,7 +13,7 @@ une application permettant de gérer les feuilles de match des équipes de ligue
 ---
 
 ```
-https://github.com/PierreHCesi/fmi.git
+git clone https://github.com/PierreHCesi/fmi.git
 cd fmi
 ```
 
@@ -21,7 +21,7 @@ cd fmi
 ---
 
 ```
-# Aller dans le dossier "back_API" et installer les dépendance de l'application Node JS
+# Aller dans le dossier "back_API" et installer les dépendances du framework Express - Node JS
 cd back_API
 npm install
 
@@ -33,7 +33,7 @@ npm start
 ---
 
 ```
-# Aller dans le dossier "back_API" et installer les dépendance de l'application Node JS
+# Aller dans le dossier "front" et installer les dépendances du framework VUE JS 
 cd front
 npm install
 
