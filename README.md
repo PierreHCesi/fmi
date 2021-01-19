@@ -61,7 +61,7 @@ cd ../back_API/config/db.config
 # URL de connexion
 http://localhost/8081
 
-# Comptes Utilisateur de l'application Web
+# Comptes Utilisateurs de l'application Web
 -------------------------------------
 | User |    MDP    |      Rôles     |
 |------|-----------|----------------|
