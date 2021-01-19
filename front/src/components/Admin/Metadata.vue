@@ -127,6 +127,7 @@ export default {
         .destroy({
           resource: `matchsheet/metadata/delete`,
           id: id,
+          token: this.$session.getItem("token"),
         })
         .then((response) => {
           console.log(response);
@@ -163,6 +164,7 @@ export default {
             key_metadata_field: this.formMetadata.eventSelected,
             valueTime: this.formMetadata.timeSelected,
           },
+          token: this.$session.getItem("token"),
         })
         .then((response) => {
           if (response.status == 200) {

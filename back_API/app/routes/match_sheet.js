@@ -146,6 +146,10 @@ module.exports = (app, authenticateJWT) => {
    */
    router.put("/edit/:id", authenticateJWT, match.edit);
 
+
+   router.put("/edit/candidate/home/:id", authenticateJWT, match.editCandidateHome);
+   router.put("/edit/candidate/visitor/:id", authenticateJWT, match.editCandidateVisitor);
+
    /** 
    * @swagger 
    * /api/v1/matchsheet/delete/{id}: 

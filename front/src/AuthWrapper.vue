@@ -1,7 +1,18 @@
 <template>
   <div>
-    <App v-if="auth" :user="user" />
-    <LoginForm v-else-if="!auth" :errorMessage="errorMessage" @submit="login" />
+    <div v-if="!loading">
+      <App v-if="auth" :user="user" />
+      <LoginForm
+        v-else-if="!auth"
+        :errorMessage="errorMessage"
+        @submit="login"
+      />
+    </div>
+    <div v-else class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,6 +24,7 @@ export default {
   components: { App, LoginForm },
   data() {
     return {
+      loading: true,
       auth: null,
       user: null,
       token: null,
@@ -27,12 +39,13 @@ export default {
       });
     } else {
       this.auth = false;
+      this.loading = false;
     }
   },
   methods: {
     login({ username, password }) {
       console.log(username, password);
-      this.$api
+      let api = this.$api
         .create({
           resource: `users`,
           data: {
@@ -55,6 +68,7 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
+      api.then(() => (this.loading = false));
     },
   },
 };

@@ -283,19 +283,50 @@ export default {
         this.selectedCaptainId,
         this.selectedCaptainSecondId
       );
-      // this.$api
-      //   .create({
-      //     resource: `/matchsheet/player/create`,
-      //     data: this.sanitizeForEntities(this.players),
-      //     token: this.$session.getItem("token"),
-      //   })
-      //   .then((response) => {
-      //     console.log(response);
-      //   });
-      console.log(this);
-      // recuperer feuille de match -> this.matchsheetId
-      // check clubId -> this.parent.clubId;
-      // change matchsheet orm - candidate 1
+      //persitance entities
+      this.$api
+        .create({
+          resource: `/matchsheet/player/create`,
+          data: this.sanitizeForEntities(this.players),
+          token: this.$session.getItem("token"),
+        })
+        .then((response) => {
+          console.log(response);
+          window.location.reload();
+        });
+      //Update candidate
+      this.$api
+        .find({
+          resource: `/matchsheet/inprogress/${this.$parent.clubId}`,
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.data.length > 0) {
+            console.log("ici");
+            console.log(response.data[0].home_club_id, this.$parent.clubId);
+            if (response.data[0].home_club_id == this.$parent.clubId) {
+              this.$api
+                .update({
+                  resource: `/matchsheet/edit/candidate/home`,
+                  id: this.matchsheetId,
+                  data: { candidate_home: 1 },
+                  token: this.$session.getItem("token"),
+                })
+                .then((d) => console.log(d));
+            } else if (
+              response.data[0].visitor_club_id == this.$parent.clubId
+            ) {
+              this.$api
+                .update({
+                  resource: `/matchsheet/edit/candidate/visitor`,
+                  id: this.matchsheetId,
+                  data: { candidate_visitor: 1 },
+                  token: this.$session.getItem("token"),
+                })
+                .then((d) => console.log(d));
+            }
+          }
+        });
     },
   },
 };

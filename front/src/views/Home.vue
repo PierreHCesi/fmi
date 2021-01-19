@@ -39,7 +39,7 @@ export default {
 <style scoped>
 .spinner-grow {
   position: relative;
-  margin-top: 25%;
+  margin-top: 3%;
   bottom: -30rem;
 }
 img {

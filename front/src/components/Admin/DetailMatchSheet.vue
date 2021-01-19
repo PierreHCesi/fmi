@@ -184,11 +184,14 @@ export default {
       data.home_club_id = this.data.home_club_id;
       data.visitor_club_id = this.data.visitor_club_id;
       data.status = "CLOSE";
+      data.candidate_home = this.data.candidate_home;
+      data.candidate_visitor = this.data.candidate_visitor;
       this.$api
         .update({
           resource: "matchsheet/edit",
           id: this.data.id,
           data: data,
+          token: this.$session.getItem("token"),
         })
         .then((e) => {
           console.log(e);
@@ -200,6 +203,7 @@ export default {
         .destroy({
           resource: `matchsheet/delete`,
           id: this.data.id,
+          token: this.$session.getItem("token"),
         })
         .then((response) => {
           if (response.status == 200) {

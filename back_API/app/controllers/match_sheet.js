@@ -35,9 +35,10 @@ exports.getAllMatchSheetWithClubs = (req, res) => {
 };
 
 exports.getMatchSheetInProgressWithClubId = (req, res) => {
+    console.log(req.params)
     db.sequelize.query(""
         + "select "
-        + "id, candidate_home, candidate_visitor, status, date, "
+        + "id, candidate_home, candidate_visitor, status, date, home_club_id, visitor_club_id, "
         + "CASE "
         + "    WHEN home_club_id= :id AND candidate_home=0 THEN 'HOME' "
         + "    WHEN home_club_id= :id AND candidate_home=1 THEN 'HOME_MODIF' "
@@ -50,6 +51,7 @@ exports.getMatchSheetInProgressWithClubId = (req, res) => {
         , { replacements: { id: req.params.id }, type: db.sequelize.QueryTypes.SELECT })
         .then(data => {
             res.send(data);
+            console.log(data)
         })
         .catch(err => {
             res.status(500).send({
@@ -82,7 +84,7 @@ exports.create = (req, res) => {
 };
 
 exports.edit = (req, res) => {
-    console.log(req.body, req.params.id)
+
     Match.update({
         home_club_id: req.body.home_club_id,
         visitor_club_id: req.body.visitor_club_id,
@@ -101,6 +103,41 @@ exports.edit = (req, res) => {
             });
         });
 };
+exports.editCandidateHome = (req, res) => {
+    console.log(req.body, req.params.id)
+    Match.update({
+        candidate_home: req.body.candidate_home,
+    }, {
+        where: {
+            id: req.params.id
+        }
+    })
+        .then((result) => res.json(result))
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving process."
+            });
+        });
+}
+exports.editCandidateVisitor = (req, res) => {
+    console.log(req.body, req.params.id)
+    Match.update({
+        candidate_visitor: req.body.candidate_visitor,
+    }, {
+        where: {
+            id: req.params.id
+        }
+    })
+        .then((result) => res.json(result))
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving process."
+            });
+        });
+}
+
 
 exports.delete = (req, res) => {
     Match.destroy({

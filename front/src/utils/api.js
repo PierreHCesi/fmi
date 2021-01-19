@@ -43,8 +43,8 @@ class APIProvider {
         }, this.login(token))
     }
 
-    destroy({ resource, id }) {
-        return http.delete(`${resource}/${id}`)
+    destroy({ resource, id, token }) {
+        return http.delete(`${resource}/${id}`, this.login(token))
     }
 }
 
