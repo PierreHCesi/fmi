@@ -5,11 +5,7 @@
     </h1>
 
     <div v-if="hasMatchsheet">
-      <MatchSheetClient
-        :items="players"
-        :matchsheetId="matchsheetId"
-        :token="token"
-      />
+      <MatchSheetClient :items="players" :matchsheetId="matchsheetId" />
     </div>
     <div v-else class="blocEmpty">
       <p>Vous n'avez pas de feuille de match en cours</p>
@@ -27,7 +23,6 @@ export default {
   },
   props: {
     clubId: Number,
-    token: String,
   },
   data() {
     return {

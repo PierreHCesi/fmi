@@ -7,11 +7,7 @@ import MatchSheetClient from '../views/MatchSheetClient.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/login',
-    name: 'AuthWrapper',
-    component: AuthWrapper
-  },
+
   {
     path: '/gestion',
     name: 'MatchSheetAdmin',
@@ -21,7 +17,12 @@ const routes = [
     path: '/matchsheet',
     name: 'MatchSheetClient',
     component: MatchSheetClient
-  }
+  },
+  {
+    path: '/login',
+    name: 'AuthWrapper',
+    component: AuthWrapper
+  },
 ]
 
 const router = new VueRouter({

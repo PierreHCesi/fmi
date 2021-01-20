@@ -174,8 +174,6 @@ export default {
   min-width: 258px;
   position: relative;
   z-index: 11;
-  background-color: #f1f1f1;
-  border: 1px solid #d3d3d3;
   text-align: center;
   margin-bottom: 10px;
 }
@@ -183,8 +181,9 @@ export default {
 .contentCard {
   padding: 12px 20px 2px 2px;
   z-index: 10;
-  background-color: #2196f3;
-  color: #fff;
+  background: linear-gradient(#64c8e6, #7d7d7d);
+  color: #2c3e50;
+  box-shadow: 0px 1px 20px 1px #353535;
 }
 .badge {
   top: -10px;

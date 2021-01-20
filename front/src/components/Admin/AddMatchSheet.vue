@@ -153,13 +153,13 @@ export default {
       data.type = arbiter_type;
       return data;
     },
-    async submit() {
+    submit() {
       this.id = null;
       let arbiterOneID = this.data.arbiterOne;
       let arbiterTwoID = this.data.arbiterTwo;
       let arbiterThreeID = this.data.arbiterThree;
       let callbackCreateArbiter = this.createrArbiter;
-      this.$api
+      let api = this.$api
         .create({
           resource: "matchsheet/create",
           data: this.data,
@@ -195,6 +195,7 @@ export default {
             token: this.$session.getItem("token"),
           });
         });
+      api.then(() => setTimeout(window.location.reload(), 2000));
     },
   },
 };
