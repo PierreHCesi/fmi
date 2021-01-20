@@ -5,11 +5,18 @@ const accessTokenSecret = '|_1981_accesstokensecret_XX_|';
 
 exports.login = (req, res) => {
     if (req.body.username != '' || req.body.password != '') {
+
+        const crypto = require('crypto');
+
+        const hash = crypto.createHmac('sha256', req.body.password)
+            .update('fmiprojet')
+            .digest('hex');
+
         db.sequelize.query(""
             + "select * "
             + "from users "
             + "where username = :username and password = :password"
-            , { replacements: { username: req.body.username, password: req.body.password }, type: db.sequelize.QueryTypes.SELECT })
+            , { replacements: { username: req.body.username, password: hash }, type: db.sequelize.QueryTypes.SELECT })
             .then(data => {
                 user = data[0]
                 if (user) {
