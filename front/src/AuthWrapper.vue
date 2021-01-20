@@ -2,11 +2,7 @@
   <div>
     <div v-if="!loading">
       <App v-if="auth" :user="user" />
-      <LoginForm
-        v-else-if="!auth"
-        :errorMessage="errorMessage"
-        @submit="login"
-      />
+      <LoginForm v-else :errorMessage="errorMessage" @submit="login" />
     </div>
     <div v-else class="text-center">
       <div class="spinner-border" role="status">
@@ -27,11 +23,10 @@ export default {
       loading: true,
       auth: null,
       user: null,
-      token: null,
       errorMessage: "",
     };
   },
-  mounted() {
+  created() {
     if (this.$session.getItem("token")) {
       this.login({
         username: this.$session.getItem("username"),
@@ -44,7 +39,6 @@ export default {
   },
   methods: {
     login({ username, password }) {
-      console.log(username, password);
       let api = this.$api
         .create({
           resource: `users`,
@@ -63,6 +57,11 @@ export default {
             this.$session.setItem("token", response.data.accesstoken);
             this.$session.setItem("username", response.data.user.username);
             this.$session.setItem("password", response.data.user.password);
+            if (this.user.role == "ADMIN") {
+              this.$router.push("/gestion").catch(() => {});
+            } else if (this.user.role == "USER") {
+              this.$router.push("/matchsheet").catch(() => {});
+            }
           }
         })
         .catch(function (error) {

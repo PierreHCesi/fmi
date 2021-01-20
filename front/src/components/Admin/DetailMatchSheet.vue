@@ -58,18 +58,22 @@
 
     <Metadata ref="detailsMetadata" :matchsheetId="data.id" />
     <hr />
-    <PdfExport :references="$refs" />
-    <button
-      type="button"
-      @click="updateStatus"
-      class="btn btn-dark mr-3"
-      v-if="this.data.status != 'CLOSE'"
-    >
-      Fermer la feuille de match
-    </button>
-    <button type="button" @click="deleteMatchSheet" class="btn btn-danger">
-      Supprimer la feuille de match
-    </button>
+    <div class="d-flex justify-content-center">
+      <div v-if="this.data.status == 'CLOSE'">
+        <PdfExport :references="$refs" />
+      </div>
+      <button
+        type="button"
+        @click="updateStatus"
+        class="btn btn-dark mr-3"
+        v-if="this.data.status != 'CLOSE'"
+      >
+        Fermer la feuille de match
+      </button>
+      <button type="button" @click="deleteMatchSheet" class="btn btn-danger">
+        Supprimer la feuille de match
+      </button>
+    </div>
   </div>
 </template>
 
@@ -193,8 +197,7 @@ export default {
           data: data,
           token: this.$session.getItem("token"),
         })
-        .then((e) => {
-          console.log(e);
+        .then(() => {
           this.data.status = "CLOSE";
         });
     },
@@ -208,7 +211,7 @@ export default {
         .then((response) => {
           if (response.status == 200) {
             this.$bvModal.hide("bv-modal-detail");
-            this.$parent.$parent.$parent.loadData();
+            setTimeout(window.location.reload(), 1000);
           }
         })
         .catch(function (error) {

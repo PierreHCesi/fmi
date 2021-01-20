@@ -2,8 +2,8 @@
   <div class="row">
     <div class="col">
       <h4>
-        Les joueurs disponibles {{ unSelectedItems.length }} /
-        {{ numberOfPlayers }}
+        Les joueurs disponibles
+        <span class="badge badge-warning">{{ unSelectedItems.length }}</span>
       </h4>
       <div class="list-group">
         <button

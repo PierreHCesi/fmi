@@ -5,7 +5,7 @@
     <footer class="text-muted">
       <div class="container">
         <p class="float-right">
-          <a href="#">Remonter</a>
+          <a href="#"><i class="bi bi-arrow-up" style="font-size: 3rem"></i></a>
         </p>
         <p>Projet web © FFF CESI - RIL 19</p>
         <p>Benjamin - Pierre</p>

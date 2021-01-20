@@ -34,7 +34,7 @@
         </ul>
         <span class="navbar-text mr-4"> Bienvenue {{ name }} </span>
         <button class="btn btn-outline-success my-2 my-sm-0" @click="logout">
-          Logout
+          Déconnexion
         </button>
       </div>
     </nav>
@@ -49,11 +49,11 @@ export default {
     name: String,
   },
   created() {
-    if (this.role == "ADMIN") {
-      this.$router.push("/gestion").catch(() => {});
-    } else if (this.role == "USER") {
-      this.$router.push("/matchsheet").catch(() => {});
-    }
+    // if (this.role == "ADMIN") {
+    //   this.$router.push("/gestion").catch(() => {});
+    // } else if (this.role == "USER") {
+    //   this.$router.push("/matchsheet").catch(() => {});
+    // }
   },
   methods: {
     logout() {

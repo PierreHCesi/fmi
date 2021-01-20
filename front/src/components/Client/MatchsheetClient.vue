@@ -34,6 +34,7 @@
                 type="button"
                 class="btn btn-info addFormCard"
                 @click="addFirstRowCard"
+                v-if="counterOfPlayers < 11"
               >
                 Ajouter
               </button>
@@ -51,6 +52,7 @@
                 type="button"
                 class="btn btn-info addFormCard"
                 @click="addMiddleRowCard"
+                v-if="counterOfPlayers < 11"
               >
                 +
               </button>
@@ -68,6 +70,7 @@
                 type="button"
                 class="btn btn-info addFormCard"
                 @click="addBackRowCard"
+                v-if="counterOfPlayers < 11"
               >
                 +
               </button>
@@ -95,7 +98,6 @@
 
           <hr />
           <SpareForm
-            :numberOfPlayers="18"
             :unSelectedItems="unSelectedItems"
             :sparePlayers="sparePlayers"
           />
@@ -209,6 +211,7 @@ export default {
       positionGoal: ["GARDIEN"],
     };
   },
+  created() {},
   computed: {
     unSelectedItems: function () {
       return this.items.filter(
@@ -339,15 +342,17 @@ export default {
   background-size: 100% 100%;
   width: 100%;
   height: 800px;
+  box-shadow: 1px 3px 20px 9px #868686;
 }
 
 .addFormCard {
   position: absolute;
   left: 99.9%;
   font-size: 23px;
-  background-color: #2196f3;
+  background-color: #343a40;
   border-color: #477e19;
   border-radius: 0 15px 15px 0;
+  box-shadow: 1px 3px 4px 0px #868686;
 }
 
 .card {
