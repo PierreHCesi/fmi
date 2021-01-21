@@ -18,28 +18,12 @@ git clone https://github.com/PierreHCesi/fmi.git
 cd fmi
 ```
 
-### Mise en place du BACK-END
+### Installation des dépendances
 ---
 
 ```
-# Aller dans le dossier "back_API" et installer les dépendances du framework Express - Node JS
-cd back_API
-npm install
-
-# Démarrer le serveur BACK-END
-npm start
-```
-
-### Mise en place du FRONT-END
----
-
-```
-# Aller dans le dossier "front" et installer les dépendances du framework VUE JS 
-cd front
-npm install
-
-# Démarrer le serveur FRONT-END
-npm run serve -- --port 8081
+# Installer les dépendances des Framework NODE JS et VUE JS
+./install.sh
 ```
 
 ### Mise en place de la base de données
