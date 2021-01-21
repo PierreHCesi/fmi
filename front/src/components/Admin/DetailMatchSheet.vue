@@ -56,21 +56,58 @@
     </div>
     <hr />
 
-    <Metadata ref="detailsMetadata" :matchsheetId="data.id" />
-    <hr />
-    <div class="d-flex justify-content-center">
+    <div v-if="status == 'CLOSE'">
+      <Metadata ref="detailsMetadata" :matchsheetId="data.id" :isClose="true" />
       <div v-if="this.data.status == 'CLOSE'">
         <PdfExport :references="$refs" />
       </div>
       <button
         type="button"
-        @click="updateStatus"
-        class="btn btn-dark mr-3"
-        v-if="this.data.status != 'CLOSE'"
+        @click="deleteMatchSheet"
+        class="btn btn-danger my-3 w-25"
       >
-        Fermer la feuille de match
+        Supprimer la feuille de match
       </button>
-      <button type="button" @click="deleteMatchSheet" class="btn btn-danger">
+    </div>
+
+    <div
+      v-if="
+        status == 'BEFORE' || (status == 'IN_PROGRESS' && status != 'CLOSE')
+      "
+    >
+      <button
+        v-if="status == 'BEFORE' && isRun == false && isCandidate == true"
+        type="button"
+        @click="runMatch"
+        class="btn btn-success my-3 mr-3"
+      >
+        Lancer le match
+      </button>
+
+      <div v-if="status == 'IN_PROGRESS' || isRun">
+        <Metadata
+          ref="detailsMetadata"
+          :matchsheetId="data.id"
+          :isClose="false"
+        />
+        <hr />
+        <div class="d-flex justify-content-center">
+          <button
+            type="button"
+            @click="updateStatus"
+            class="btn btn-dark my-3 w-25"
+            v-if="this.data.status != 'CLOSE'"
+          >
+            Fermer la feuille de match
+          </button>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        @click="deleteMatchSheet"
+        class="btn btn-danger my-3 w-25"
+      >
         Supprimer la feuille de match
       </button>
     </div>
@@ -103,40 +140,51 @@ export default {
       visitorStaff_coach: null,
       visitorStaff_second: null,
       arbiters: [],
+      metadatas: null,
       butHome: 0,
       butVisitor: 0,
+      status: null,
+      isCandidate: false,
+      isRun: false,
     };
   },
   created() {
     this.loadData();
-  },
-  computed: {
-    getButHome() {
-      let but = 0;
-      let playerHome = this.$refs.detailsMetadata.metadatas.filter(
-        (player) => player.home_club_id == player.club_id
-      );
-      playerHome.map((p) => {
-        if (p.key_metadata_field == "BUT") {
-          but++;
-        }
-      });
-      return but;
-    },
-    getButVisitor() {
-      let but = 0;
-      let visitorHome = this.$refs.detailsMetadata.metadatas.filter(
-        (player) => player.visitor_club_id == player.club_id
-      );
-      visitorHome.map((p) => {
-        if (p.key_metadata_field == "BUT") {
-          but++;
-        }
-      });
-      return but;
-    },
+    this.checkMatchsheetIsCandidate();
   },
   methods: {
+    checkMatchsheetIsCandidate() {
+      this.$api
+        .find({
+          resource: `matchsheet/${this.data.id}/`,
+        })
+        .then((matchsheet) => {
+          if (matchsheet.data) {
+            this.status = matchsheet.data.status;
+            if (
+              matchsheet.data.candidate_home == 1 &&
+              matchsheet.data.candidate_visitor == 1 &&
+              matchsheet.data.status == "BEFORE"
+            ) {
+              this.isCandidate = true;
+            }
+          }
+        });
+    },
+    runMatch() {
+      this.isRun = true;
+      //change state match in-progress
+      this.$api
+        .update({
+          resource: "matchsheet/edit/status",
+          id: this.data.id,
+          data: { status: "IN_PROGRESS" },
+          token: this.$session.getItem("token"),
+        })
+        .then(() => {
+          this.data.status = "IN_PROGRESS";
+        });
+    },
     async loadData() {
       await this.$api
         .find({
@@ -161,8 +209,6 @@ export default {
         .then((response) => {
           this.arbiters = response.data;
         });
-      this.butHome = this.getButHome;
-      this.butVisitor = this.getButVisitor;
     },
     getCoach(array) {
       let coach = null;
@@ -199,6 +245,7 @@ export default {
         })
         .then(() => {
           this.data.status = "CLOSE";
+          this.status = "CLOSE";
         });
     },
     deleteMatchSheet() {

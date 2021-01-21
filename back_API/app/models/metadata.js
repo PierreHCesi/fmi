@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('metadata', {
     id: {
       autoIncrement: true,
@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     key_metadata_field: {
-      type: "ENUM('BUT','RED_CARD','INPUT','OUTPUT','YELLOW_CARD')",
+      type: "ENUM('BUT','RED_CARD','INPUT','OUTPUT','YELLOW_CARD', 'CSC')",
       allowNull: false
     },
     valueTime: {

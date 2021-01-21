@@ -14,7 +14,7 @@
           :key="item.id"
           @click="addOnSidelines(item)"
         >
-          {{ item.number }} - {{ item.name }}
+          {{ item.poste }} - {{ item.number }} - {{ item.name }}
           <i
             v-if="sparePlayers.length < 6"
             class="float-right bi bi-caret-right"
@@ -43,7 +43,7 @@
           :key="player.id"
           @click="removeSpare(player)"
         >
-          {{ player.number }} - {{ player.name }}
+          {{ player.poste }} - {{ player.number }} - {{ player.name }}
           <button
             type="button"
             class="close"

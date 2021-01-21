@@ -22,20 +22,23 @@ export default {
     return {
       loading: true,
       auth: null,
-      user: null,
+      user: {
+        username: null,
+        role: null,
+      },
       errorMessage: "",
     };
   },
   created() {
     if (this.$session.getItem("token")) {
-      this.login({
-        username: this.$session.getItem("username"),
-        password: this.$session.getItem("password"),
-      });
+      this.auth = true;
+      this.user.role = this.$session.getItem("role");
+      this.user.username = this.$session.getItem("username");
+      this.user.club_id = this.$session.getItem("clubId");
     } else {
       this.auth = false;
-      this.loading = false;
     }
+    this.loading = false;
   },
   methods: {
     login({ username, password }) {
@@ -56,7 +59,8 @@ export default {
             this.user = response.data.user;
             this.$session.setItem("token", response.data.accesstoken);
             this.$session.setItem("username", response.data.user.username);
-            this.$session.setItem("password", response.data.user.password);
+            this.$session.setItem("role", response.data.user.role);
+            this.$session.setItem("clubId", response.data.user.club_id);
             if (this.user.role == "ADMIN") {
               this.$router.push("/gestion").catch(() => {});
             } else if (this.user.role == "USER") {

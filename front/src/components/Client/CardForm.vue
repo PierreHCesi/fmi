@@ -60,7 +60,7 @@
             :value="item.id"
             :key="item.id"
           >
-            {{ item.name }}
+            {{ item.poste }} -{{ item.name }}
           </option>
         </select>
       </div>
@@ -184,6 +184,9 @@ export default {
   background: linear-gradient(#64c8e6, #7d7d7d);
   color: #2c3e50;
   box-shadow: 0px 1px 20px 1px #353535;
+}
+.contentCard .form-control-sm {
+  font-size: 0.75rem;
 }
 .badge {
   top: -10px;

@@ -47,6 +47,9 @@ module.exports = (app, authenticateJWT) => {
    */
    router.get("/", match.getAllMatchSheet);
 
+
+
+
    /** 
 * @swagger 
 * /api/v1/matchsheet/clubs: 
@@ -63,6 +66,29 @@ module.exports = (app, authenticateJWT) => {
 *         description: OK 
 */
    router.get("/clubs", match.getAllMatchSheetWithClubs);
+
+   /** 
+* @swagger 
+* /api/v1/matchsheet/{id}: 
+*   get: 
+*     description: | 
+*       The service will offer a Match endpoint which can be accessed via a HTTP GET request. 
+*       It will return a status 200 and list of matchsheet. 
+*     tags: 
+*       - Match 
+*     produces: 
+*       - application/json 
+*     parameters:
+*       - name: id
+*         description: club id
+*         in: path
+*         required: true
+*         type: integer
+*     responses: 
+*       200: 
+*         description: OK 
+*/
+   router.get("/:id", match.getMatchSheetByID);
 
    /** 
 * @swagger 
@@ -145,10 +171,9 @@ module.exports = (app, authenticateJWT) => {
    *         description: Successfully edited 
    */
    router.put("/edit/:id", authenticateJWT, match.edit);
-
-
    router.put("/edit/candidate/home/:id", authenticateJWT, match.editCandidateHome);
    router.put("/edit/candidate/visitor/:id", authenticateJWT, match.editCandidateVisitor);
+   router.put("/edit/status/:id", authenticateJWT, match.editStatus);
 
    /** 
    * @swagger 

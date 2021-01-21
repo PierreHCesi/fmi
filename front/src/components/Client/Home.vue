@@ -22,7 +22,7 @@ export default {
     MatchSheetClient,
   },
   props: {
-    clubId: Number,
+    clubId: String,
   },
   data() {
     return {

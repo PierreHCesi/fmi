@@ -1,5 +1,5 @@
 <template>
-  <button type="button" class="btn btn-info mr-3" @click="generate">
+  <button type="button" class="btn btn-info" @click="generate">
     Export PDF
   </button>
 </template>
