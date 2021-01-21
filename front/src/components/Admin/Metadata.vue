@@ -1,7 +1,38 @@
 <template>
   <div class="jumbotron jumbotron-fluid py-3 px-1">
     <h4 class="mb-1">Evènements du Match</h4>
-    <div v-for="item in metadatas" :key="item.id + item.name + item.valueTime">
+    <div v-if="isClose">
+      <div
+        v-for="item in metadatas"
+        :key="item.id + item.name + item.valueTime"
+      >
+        <div
+          v-if="item.home_club_id == item.club_id"
+          class="list-group-event text-left"
+        >
+          <span
+            v-html="render(item.key_metadata_field)"
+            class="icon-metadata"
+          />
+          {{ item.name }} {{ item.valueTime }}' min.
+        </div>
+        <div
+          v-else
+          class="list-group-item text-right metadata-visitor metaClose"
+        >
+          <span
+            v-html="render(item.key_metadata_field)"
+            class="icon-metadata"
+          />
+          {{ item.name }} {{ item.valueTime }}' min.
+        </div>
+      </div>
+    </div>
+    <div
+      v-else
+      v-for="item in metadatas"
+      :key="item.id + item.name + item.valueTime"
+    >
       <div
         v-if="item.home_club_id == item.club_id"
         class="list-group-event text-left"
@@ -29,7 +60,7 @@
       </div>
     </div>
 
-    <form @submit.prevent="submit">
+    <form v-if="!isClose" @submit.prevent="submit">
       <div class="form-row mt-4">
         <div class="form-group col-md-6">
           <label for="inputPlayer">Joueurs</label>
@@ -39,27 +70,37 @@
             name="player"
             v-model="formMetadata.playerSelected"
           >
-            <option disabled value="">Joueurs</option>
-            <option
-              v-for="player in players"
-              :value="player.person_id"
-              :key="player.id"
+            <optgroup
+              v-for="(club, name) in groupPlayers"
+              :label="name"
+              :key="name"
             >
-              {{ player.name }}
-            </option>
+              <option
+                v-for="player in club"
+                :value="player.person_id"
+                :key="player.person_id"
+              >
+                {{ player.number }} - {{ player.name }}
+              </option>
+            </optgroup>
           </select>
         </div>
         <div class="form-group col-md-4">
-          <label for="inputEvent">Evènement</label>
+          <label for="inputEvent">Evènements</label>
           <select
             id="inputEvent"
             class="form-control form-control-sm"
             name="eventKey"
             v-model="formMetadata.eventSelected"
           >
-            <option disabled value="">Event</option>
+            <option disabled value="">Evènements</option>
             <option v-for="key in enumKey" :value="key" :key="key">
-              {{ key }}
+              <slot v-if="key == 'BUT'">But</slot>
+              <slot v-if="key == 'YELLOW_CARD'">Carton Jaune</slot>
+              <slot v-if="key == 'RED_CARD'">Carton Rouge</slot>
+              <slot v-if="key == 'INPUT'">Entrée</slot>
+              <slot v-if="key == 'OUTPUT'">Sortie</slot>
+              <slot v-if="key == 'CSC'">But contre son camp</slot>
             </option>
           </select>
         </div>
@@ -84,12 +125,17 @@ export default {
   components: {},
   props: {
     matchsheetId: Number,
+    isClose: Boolean,
   },
   data() {
     return {
       metadatas: [],
       players: [],
-      enumKey: ["BUT", "YELLOW_CARD", "RED_CARD", "INPUT", "OUTPUT"],
+      groupPlayers: {
+        domicile: [],
+        visiteur: [],
+      },
+      enumKey: ["BUT", "YELLOW_CARD", "RED_CARD", "INPUT", "OUTPUT", "CSC"],
       formMetadata: {
         playerSelected: null,
         eventSelected: null,
@@ -113,6 +159,7 @@ export default {
         })
         .then((response) => {
           this.metadatas = response.data;
+          this.computeScore(response.data);
         });
       await this.$api
         .find({
@@ -120,7 +167,43 @@ export default {
         })
         .then((response) => {
           this.players = response.data;
+          if (this.groupPlayers.domicile.length == 0) {
+            this.players.map((player) => {
+              if (player.club_id == player.home_club_id) {
+                this.groupPlayers.domicile.push(player);
+              } else {
+                this.groupPlayers.visiteur.push(player);
+              }
+            });
+          }
         });
+    },
+    computeScore(metadatas) {
+      if (metadatas != null) {
+        this.$parent.butHome = 0;
+        this.$parent.butVisitor = 0;
+        let playerHome = metadatas.filter(
+          (player) => player.home_club_id == player.club_id
+        );
+        playerHome.map((p) => {
+          if (p.key_metadata_field == "BUT") {
+            this.$parent.butHome += 1;
+          } else if (p.key_metadata_field == "CSC") {
+            this.$parent.butVisitor += 1;
+          }
+        });
+
+        let visitorHome = metadatas.filter(
+          (player) => player.visitor_club_id == player.club_id
+        );
+        visitorHome.map((p) => {
+          if (p.key_metadata_field == "BUT") {
+            this.$parent.butVisitor += 1;
+          } else if (p.key_metadata_field == "CSC") {
+            this.$parent.butHome += 1;
+          }
+        });
+      }
     },
     deleteHandler(id) {
       this.$api
@@ -151,6 +234,8 @@ export default {
         html = `<i class="bi bi-box-arrow-in-up"></i>`;
       } else if (enumKey == "OUTPUT") {
         html = `<i class="bi bi-box-arrow-down"></i>`;
+      } else if (enumKey == "CSC") {
+        html = `<img src="${this.svgGoal}" style="width:17px;"/> <span>(contre son camp)</span>`;
       }
       return html;
     },
@@ -195,5 +280,8 @@ export default {
 }
 .icon-metadata {
   vertical-align: top;
+}
+.metaClose {
+  padding: 0.4rem;
 }
 </style>

@@ -17,6 +17,19 @@ exports.getAllMatchSheet = (req, res) => {
         });
 };
 
+exports.getMatchSheetByID = (req, res) => {
+    Match.findByPk(req.params.id)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving process."
+            });
+        });
+};
+
 exports.getAllMatchSheetWithClubs = (req, res) => {
     db.sequelize.query(""
         + "select match_sheet.id, home_club_id, visitor_club_id, status, date, home.name as homeName, "
@@ -35,7 +48,6 @@ exports.getAllMatchSheetWithClubs = (req, res) => {
 };
 
 exports.getMatchSheetInProgressWithClubId = (req, res) => {
-    console.log(req.params)
     db.sequelize.query(""
         + "select "
         + "id, candidate_home, candidate_visitor, status, date, home_club_id, visitor_club_id, "
@@ -104,7 +116,6 @@ exports.edit = (req, res) => {
         });
 };
 exports.editCandidateHome = (req, res) => {
-    console.log(req.body, req.params.id)
     Match.update({
         candidate_home: req.body.candidate_home,
     }, {
@@ -121,7 +132,6 @@ exports.editCandidateHome = (req, res) => {
         });
 }
 exports.editCandidateVisitor = (req, res) => {
-    console.log(req.body, req.params.id)
     Match.update({
         candidate_visitor: req.body.candidate_visitor,
     }, {
@@ -137,7 +147,22 @@ exports.editCandidateVisitor = (req, res) => {
             });
         });
 }
-
+exports.editStatus = (req, res) => {
+    Match.update({
+        status: req.body.status,
+    }, {
+        where: {
+            id: req.params.id
+        }
+    })
+        .then((result) => res.json(result))
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving process."
+            });
+        });
+}
 
 exports.delete = (req, res) => {
     Match.destroy({

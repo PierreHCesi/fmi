@@ -172,6 +172,10 @@
           <hr />
           <p class="lead">Finaliser la feuille de Match</p>
           <hr />
+          <div v-if="errorForm" class="alert alert-danger" role="alert">
+            <p>{{ errorForm }}</p>
+          </div>
+
           <button type="submit" class="btn btn-primary">Valider</button>
         </div>
       </div>
@@ -209,6 +213,7 @@ export default {
       positionMiddleRow: ["MILIEU_OFF", "MILIEU", "MILIEU_DEF"],
       positionBackRow: ["ARRIERE"],
       positionGoal: ["GARDIEN"],
+      errorForm: "",
     };
   },
   created() {},
@@ -286,50 +291,62 @@ export default {
         this.selectedCaptainId,
         this.selectedCaptainSecondId
       );
-      //persitance entities
-      this.$api
-        .create({
-          resource: `/matchsheet/player/create`,
-          data: this.sanitizeForEntities(this.players),
-          token: this.$session.getItem("token"),
-        })
-        .then((response) => {
-          console.log(response);
-          window.location.reload();
-        });
-      //Update candidate
-      this.$api
-        .find({
-          resource: `/matchsheet/inprogress/${this.$parent.clubId}`,
-        })
-        .then((response) => {
-          console.log(response);
-          if (response.data.length > 0) {
-            console.log("ici");
-            console.log(response.data[0].home_club_id, this.$parent.clubId);
-            if (response.data[0].home_club_id == this.$parent.clubId) {
-              this.$api
-                .update({
-                  resource: `/matchsheet/edit/candidate/home`,
-                  id: this.matchsheetId,
-                  data: { candidate_home: 1 },
-                  token: this.$session.getItem("token"),
-                })
-                .then((d) => console.log(d));
-            } else if (
-              response.data[0].visitor_club_id == this.$parent.clubId
-            ) {
-              this.$api
-                .update({
-                  resource: `/matchsheet/edit/candidate/visitor`,
-                  id: this.matchsheetId,
-                  data: { candidate_visitor: 1 },
-                  token: this.$session.getItem("token"),
-                })
-                .then((d) => console.log(d));
+      console.log(this.$parent.clubId);
+      if (this.holderPlayers.length != 11) {
+        this.errorForm = "Il manque des titulaires dans l'étape 1 !";
+      } else if (this.sparePlayers < 3) {
+        this.errorForm = "Il manque des remplaçants dans l'étape 2 !";
+      } else if (this.selectedCaptainId == null) {
+        this.errorForm = "Veuillez sélectionner le capitaine de l'équipe !";
+      } else if (this.selectedCaptainSecondId == null) {
+        this.errorForm =
+          "Veuillez sélectionner le capitaine suppléant de l'équipe !";
+      } else {
+        //persitance entities
+        this.$api
+          .create({
+            resource: `/matchsheet/player/create`,
+            data: this.sanitizeForEntities(this.players),
+            token: this.$session.getItem("token"),
+          })
+          .then((response) => {
+            console.log(response);
+            window.location.reload();
+          });
+        //Update candidate
+        this.$api
+          .find({
+            resource: `/matchsheet/inprogress/${this.$parent.clubId}`,
+          })
+          .then((response) => {
+            console.log(response);
+            if (response.data.length > 0) {
+              console.log("ici");
+              console.log(response.data[0].home_club_id, this.$parent.clubId);
+              if (response.data[0].home_club_id == this.$parent.clubId) {
+                this.$api
+                  .update({
+                    resource: `/matchsheet/edit/candidate/home`,
+                    id: this.matchsheetId,
+                    data: { candidate_home: 1 },
+                    token: this.$session.getItem("token"),
+                  })
+                  .then((d) => console.log(d));
+              } else if (
+                response.data[0].visitor_club_id == this.$parent.clubId
+              ) {
+                this.$api
+                  .update({
+                    resource: `/matchsheet/edit/candidate/visitor`,
+                    id: this.matchsheetId,
+                    data: { candidate_visitor: 1 },
+                    token: this.$session.getItem("token"),
+                  })
+                  .then((d) => console.log(d));
+              }
             }
-          }
-        });
+          });
+      }
     },
   },
 };

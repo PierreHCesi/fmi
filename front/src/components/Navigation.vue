@@ -48,16 +48,11 @@ export default {
     role: String,
     name: String,
   },
-  created() {
-    // if (this.role == "ADMIN") {
-    //   this.$router.push("/gestion").catch(() => {});
-    // } else if (this.role == "USER") {
-    //   this.$router.push("/matchsheet").catch(() => {});
-    // }
-  },
   methods: {
     logout() {
       this.$session.removeItem("token");
+      this.$session.removeItem("username");
+      this.$session.removeItem("role");
       this.$router.push("/login").catch(() => {});
     },
   },

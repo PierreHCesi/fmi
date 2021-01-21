@@ -6,6 +6,7 @@ const accessTokenSecret = '|_1981_accesstokensecret_XX_|';
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
+const path = require('path');
 
 var corsOptions = {
     origin: process.env.CORS
@@ -37,6 +38,8 @@ const authenticateJWT = (req, res, next) => {
         res.sendStatus(401);
     }
 };
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'client/dist')));
 
 require("./app/routes/users")(app, authenticateJWT);
 require("./app/routes/club")(app, authenticateJWT);
@@ -47,9 +50,13 @@ require("./app/routes/player_detail")(app, authenticateJWT);
 require("./app/routes/metadata")(app, authenticateJWT);
 require('./config/swaggerJsdoc')(app, authenticateJWT);
 
-app.get("/", authenticateJWT, (req, res) => {
-    res.json({ message: "Rest API" });
+
+
+// Handles any requests that don't match the ones above
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/dist/index.html'));
 });
+
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
