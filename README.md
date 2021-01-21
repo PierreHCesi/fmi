@@ -22,7 +22,7 @@ cd fmi
 ---
 
 ```
-# Installer les dépendances des Framework NODE JS et VUE JS
+# Installer les dépendances des Frameworks NODE JS et VUE JS
 ./install.sh
 ```
 
