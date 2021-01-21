@@ -38,6 +38,15 @@ cd Script
 cd ../back_API/config/db.config
 ```
 
+### Lancement de la solution
+---
+
+```
+# Lancer la solution
+cd back_API
+npm run start
+```
+
 ### Accès a l'application Web
 ---
 
